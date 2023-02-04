@@ -5,8 +5,9 @@ const catchAsync = require("../utils/error-handling/catchAsync");
 const createEvent = catchAsync((req, res) => {
   const { title, description, scheduledAt, venue } = req.body;
 
-  const event = Event.create({
+  const response = await Event.create({
     title,
+    organizedBy,
     description,
     scheduledAt,
     venue,
@@ -29,7 +30,7 @@ const createEvent = catchAsync((req, res) => {
 
 const approveEvent = async (req, res) => {
   const { approvedBy, eventId } = req.body;
-  console.log({ approvedBy, eventId });
+  // console.log({ approvedBy, eventId });
   if (approvedBy != "faculty") {
     const update = "approval." + approvedBy;
     const updatedEvent = await Event.findOneAndUpdate(
@@ -54,8 +55,7 @@ const approveEvent = async (req, res) => {
 
     //get total faculty
     const totalFacultyCount = await User.count({ role: "faculty" });
-    console.log({ totalFacultyCount });
-
+    // console.log({ totalFacultyCount });
     if (response.approval.facultyCount >= totalFacultyCount / 2) {
       //if more than half approved set faculty to true
       const updatedEve = await Event.findOneAndUpdate(

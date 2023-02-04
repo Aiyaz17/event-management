@@ -14,3 +14,6 @@ app.use((err, req, res, next) => {
     err: err.message,
   });
 });
+app.listen(PORT, () => {
+  console.log("Running on PORT", PORT);
+});

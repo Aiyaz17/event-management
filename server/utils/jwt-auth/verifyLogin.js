@@ -13,7 +13,7 @@ module.exports = catchAsync(async (req,res,next)=>{
         return next()
     }
 
-    console.log(token)
+    // console.log(token)
     const decoded = await util.promisify(jwt.verify)(token,"Problem statement dusra hain")
     
     req.user = decoded
