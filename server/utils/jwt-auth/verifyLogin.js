@@ -19,7 +19,7 @@ module.exports = catchAsync(async (req,res,next)=>{
     req.user = decoded
     const newUser = await User.findById(decoded.id)
     return res.status(200).json({
-        status:"Success",
+        status:"success",
         newUser
 
     })

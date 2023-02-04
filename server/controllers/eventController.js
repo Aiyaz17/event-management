@@ -1,10 +1,11 @@
 const Event = require("../models/Event");
 const User = require("../models/User");
+const catchAsync = require("../utils/error-handling/catchAsync");
 
-const createEvent = (req, res) => {
+const createEvent = catchAsync((req, res) => {
   const { title, description, scheduledAt, venue } = req.body;
 
-  const response = Event.create({
+  const event = Event.create({
     title,
     description,
     scheduledAt,
@@ -17,22 +18,32 @@ const createEvent = (req, res) => {
       faculty: false,
     },
   });
-  res.send(response);
+  res.status(200).json({
+    status:"success",
+    data:{
+      event
+    }
+  });
   //todo - test response
-};
+});
 
 const approveEvent = async (req, res) => {
   const { approvedBy, eventId } = req.body;
   console.log({ approvedBy, eventId });
   if (approvedBy != "faculty") {
     const update = "approval." + approvedBy;
-    const response = await Event.findOneAndUpdate(
+    const updatedEvent = await Event.findOneAndUpdate(
       { _id: eventId },
       { [update]: true },
       { new: true }
     );
-    //todo - send response
-    res.send(response);
+    
+    res.status(200).json({
+      status:"success",
+      data:{
+        updatedEvent
+      }
+    });
   } else {
     //increment faculty count
     const response = await Event.findOneAndUpdate(
@@ -44,16 +55,27 @@ const approveEvent = async (req, res) => {
     //get total faculty
     const totalFacultyCount = await User.count({ role: "faculty" });
     console.log({ totalFacultyCount });
+
     if (response.approval.facultyCount >= totalFacultyCount / 2) {
       //if more than half approved set faculty to true
-      const response = await Event.findOneAndUpdate(
+      const updatedEvent = await Event.findOneAndUpdate(
         { _id: eventId, "approval.faculty": false },
         {
           "approval.faculty": true,
         }
       );
       //todo - send response
-      res.send(response);
+      res.status(200).json({
+        status:"success",
+        data:{
+          updatedEvent
+        }
+      });
+    }else{
+      res.status(200).json({
+        status:"success",
+       
+      });
     }
   }
 };

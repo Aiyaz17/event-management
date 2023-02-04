@@ -13,7 +13,7 @@ const verifyPassword = require('../utils/verifyPassword')
     const newUser = await User.create(req.body)
     const token = await signToken(newUser._id,newUser.role)
     res.status(200).json({
-        status:"Success",
+        status:"success",
         data:{
             newUser
         },
