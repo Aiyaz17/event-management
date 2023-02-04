@@ -2,7 +2,10 @@ const mongoose = require('mongoose')
 
 
 const eventSchema = new mongoose.Schema({
-
+    organizedBy:{
+        type:String,
+        required:true
+    },
     title:{
         type:String,
         required:true
