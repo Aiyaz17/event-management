@@ -58,7 +58,7 @@ const approveEvent = async (req, res) => {
 
     if (response.approval.facultyCount >= totalFacultyCount / 2) {
       //if more than half approved set faculty to true
-      const updatedEvent = await Event.findOneAndUpdate(
+      const updatedEve = await Event.findOneAndUpdate(
         { _id: eventId, "approval.faculty": false },
         {
           "approval.faculty": true,
@@ -84,16 +84,26 @@ const getEvents = async (req, res) => {
   const { isAdmin } = req.body;
 
   if (isAdmin) {
-    const response = await Event.find({}).sort({ scheduledAt: "desc" });
-    res.send(response);
+    const events = await Event.find({}).sort({ scheduledAt: "desc" });
+    res.status(200).json({
+      status:"success",
+      data:{
+        events
+      }
+    });
     //todo - test response
   } else {
-    const response = await Event.find({
+    const events = await Event.find({
       "approval.dean": true,
       "approval.general_committee": true,
       "approval.faculty": true,
     }).sort({ scheduledAt: "desc" });
-    res.send(response);
+    res.status(200).json({
+      status:"success",
+      data:{
+       events
+      }
+    });
     //todo - test response
   }
 };
