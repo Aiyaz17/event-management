@@ -1,41 +1,37 @@
-const mongoose=require('mongoose')
-
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-    email:{
-        type:String,
-        required:[true,"Email field is required"],
-        unique:true,
-        
-    },
-    name:{
-        type:String,
-        required:[true,"Name field is required"]
-    },
-    phone:{
-        type:String,
-        required:[true,"Phone no field is required"],
-    },
-   
-    roles:{
-        type:String,
-        required:true,
-        default:"user",
-        enum:["general_committee","committee","dean","faculty","user"],
+  email: {
+    type: String,
+    required: [true, "Email field is required"],
+    unique: true,
+  },
+  name: {
+    type: String,
+    required: [true, "Name field is required"],
+  },
+  phone: {
+    type: String,
+    required: [true, "Phone no field is required"],
+  },
 
-},
-password:{
-    type:String,
-    required:true
-},
-registered_events:[
+  role: {
+    type: String,
+    required: true,
+    default: "user",
+    enum: ["general_committee", "committee", "dean", "faculty", "user"],
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  registered_events: [
     {
-        type:mongoose.Schema.ObjectId,
-        ref:"Event"
-    }
-]
-
-})
+      type: mongoose.Schema.ObjectId,
+      ref: "Event",
+    },
+  ],
+});
 
 /* userSchema.pre('save',async function(next){
     if(!this.isModified('password')){
@@ -58,7 +54,5 @@ userSchema.pre('save',async function(next){
 
 }) */
 
-
-
-const User = mongoose.model('User',userSchema)
-module.exports = User
+const User = mongoose.model("User", userSchema);
+module.exports = User;
