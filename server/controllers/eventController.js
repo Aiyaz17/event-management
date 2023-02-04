@@ -2,8 +2,8 @@ const Event = require("../models/Event");
 const User = require("../models/User");
 const catchAsync = require("../utils/error-handling/catchAsync");
 
-const createEvent = catchAsync((req, res) => {
-  const { title, description, scheduledAt, venue } = req.body;
+const createEvent = catchAsync(async (req, res) => {
+  const { title, organizedBy, description, scheduledAt, venue } = req.body;
 
   const response = await Event.create({
     title,
@@ -20,10 +20,10 @@ const createEvent = catchAsync((req, res) => {
     },
   });
   res.status(200).json({
-    status:"success",
-    data:{
-      event
-    }
+    status: "success",
+    data: {
+      response,
+    },
   });
   //todo - test response
 });
@@ -38,12 +38,12 @@ const approveEvent = async (req, res) => {
       { [update]: true },
       { new: true }
     );
-    
+
     res.status(200).json({
-      status:"success",
-      data:{
-        updatedEvent
-      }
+      status: "success",
+      data: {
+        updatedEvent,
+      },
     });
   } else {
     //increment faculty count
@@ -66,15 +66,14 @@ const approveEvent = async (req, res) => {
       );
       //todo - send response
       res.status(200).json({
-        status:"success",
-        data:{
-          updatedEvent
-        }
+        status: "success",
+        data: {
+          updatedEvent,
+        },
       });
-    }else{
+    } else {
       res.status(200).json({
-        status:"success",
-       
+        status: "success",
       });
     }
   }
@@ -86,10 +85,10 @@ const getEvents = async (req, res) => {
   if (isAdmin) {
     const events = await Event.find({}).sort({ scheduledAt: "desc" });
     res.status(200).json({
-      status:"success",
-      data:{
-        events
-      }
+      status: "success",
+      data: {
+        events,
+      },
     });
     //todo - test response
   } else {
@@ -99,10 +98,10 @@ const getEvents = async (req, res) => {
       "approval.faculty": true,
     }).sort({ scheduledAt: "desc" });
     res.status(200).json({
-      status:"success",
-      data:{
-       events
-      }
+      status: "success",
+      data: {
+        events,
+      },
     });
     //todo - test response
   }
