@@ -1,5 +1,5 @@
 const mongoose=require('mongoose')
-
+const bcrypt = require('bcrypt')
 
 const userSchema = new mongoose.Schema({
     email:{
@@ -17,11 +17,11 @@ const userSchema = new mongoose.Schema({
         required:[true,"Phone no field is required"],
     },
    
-    roles:{
+    role:{
         type:String,
         required:true,
         default:"user",
-        enum:["general_committee","committee","dean","faculty","user"],
+        enum:["super_admin","general_committee","committee","dean","faculty","user"],
 
 },
 password:{
@@ -37,7 +37,7 @@ registered_events:[
 
 })
 
-/* userSchema.pre('save',async function(next){
+userSchema.pre('save',async function(next){
     if(!this.isModified('password')){
         return next()
     }
@@ -51,12 +51,12 @@ registered_events:[
    next()
 
 })
-userSchema.pre('save',async function(next){
+/* userSchema.pre('save',async function(next){
    if(this.id==='63bb0fa50df0b831f34e98a6') return next()
-   if(this.roles==='admin') return next(new AppError('You are not the admin'))
+   if(this.role==='admin') return next(new AppError('You are not the admin'))
    next()
 
-}) */
+})  */
 
 
 

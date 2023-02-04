@@ -15,7 +15,7 @@ const eventSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    timestamp:{
+    scheduledAt:{
         type:Date,
         required:true,
         
@@ -23,14 +23,16 @@ const eventSchema = new mongoose.Schema({
     venue:{
         type:String,
         required:true,
+        enum:['seminar_hall','ground','auditorium']
         
     },
-    register_users:{
+    register_users:[
+        {
         type:mongoose.Schema.ObjectId,
         ref:"User",
         default:[]
-        
-    },
+        }
+        ],
     approval:{
         dean:{
             type:Boolean,
