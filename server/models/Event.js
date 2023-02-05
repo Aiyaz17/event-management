@@ -26,7 +26,7 @@ const eventSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.ObjectId,
       ref: "User",
-      default: [],
+      
     },
   ],
   approval: {

@@ -1,10 +1,11 @@
 const Event = require("../models/Event");
 const User = require("../models/User");
 const catchAsync = require("../utils/error-handling/catchAsync");
+const sendEmail = require("../utils/sendEmail");
 
 const createEvent = catchAsync(async (req, res) => {
   const { title, organizedBy, description, scheduledAt, venue } = req.body;
-  git;
+  
   const response = await Event.create({
     title,
     organizedBy,
@@ -19,6 +20,7 @@ const createEvent = catchAsync(async (req, res) => {
       faculty: false,
     },
   });
+  console.log(await User.find({roles:['dean','faculty','general_committee']}))
   res.status(200).json({
     status: "success",
     data: {
@@ -115,6 +117,7 @@ const registerEvent = catchAsync(async (req, res, next) => {
     { $addToSet: { registered_events: event_id } },
     { runValidators: true }
   );
+  console.log(await Event.findByIdAndUpdate(event_id,{ $addToSet: { register_users: id } }))
   res.status(200).json({
     status: "success",
   });
