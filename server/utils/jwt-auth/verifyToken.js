@@ -1,5 +1,6 @@
 const catchAsync = require("../error-handling/catchAsync");
-
+const jwt = require('jsonwebtoken')
+const util = require('util')
 module.exports = catchAsync(async (req, res, next) => {
   let token = "";
   if (
@@ -14,7 +15,7 @@ module.exports = catchAsync(async (req, res, next) => {
   }
 
   // console.log(token)
-  const decoded = await util.promisify(jwt.verify)(token, process.env.JWT_KEY);
+  const decoded = await util.promisify(jwt.verify)(token, "Problem statement dusra hain");
   req.user = decoded;
   // console.log(decoded)
   next();

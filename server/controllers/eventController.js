@@ -4,7 +4,7 @@ const catchAsync = require("../utils/error-handling/catchAsync");
 
 const createEvent = catchAsync(async (req, res) => {
   const { title, organizedBy, description, scheduledAt, venue } = req.body;
-
+git 
   const response = await Event.create({
     title,
     organizedBy,
@@ -107,8 +107,37 @@ const getEvents = async (req, res) => {
   }
 };
 
+const registerEvent = catchAsync(async (req,res,next)=>{
+  const {event_id} = req.body
+  await User.findByIdAndUpdate(req.user.id,{$addToSet:{registered_events:event_id}},{runValidators:true})
+  res.status(200).json({
+    status:"success"
+  })
+
+})
+
+const getRegisteredEvents = catchAsync(async (req, res, next) => {
+  const  id  = req.user.id;
+
+  const user = await User.findById( id).populate('registered_events');
+  const events = user.registered_events
+  console.log(new Date(events[0].scheduledAt))
+  /* res.status(200).json({
+    status:"success",
+    data:{
+      events
+    }
+
+  }) */
+
+  //to do - sorting
+
+});
+
 module.exports = {
   approveEvent,
   getEvents,
   createEvent,
+  registerEvent,
+  getRegisteredEvents
 };

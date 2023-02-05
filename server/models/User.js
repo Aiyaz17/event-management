@@ -37,7 +37,12 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.ObjectId,
       ref: "Event",
+      
+      
     },
+    
+    
+
   ],
 });
 
