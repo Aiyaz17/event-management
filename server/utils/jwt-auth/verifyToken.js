@@ -17,6 +17,6 @@ module.exports = catchAsync(async (req, res, next) => {
   // console.log(token)
   const decoded = await util.promisify(jwt.verify)(token, "Problem statement dusra hain");
   req.user = decoded;
-  // console.log(decoded)
+  console.log(decoded)
   next();
 });
