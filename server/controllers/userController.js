@@ -3,6 +3,7 @@ const AppError = require("../utils/error-handling/AppError");
 const catchAsync = require("../utils/error-handling/catchAsync");
 const signToken = require("../utils/jwt-auth/signToken");
 const verifyPassword = require("../utils/verifyPassword");
+
 const create = catchAsync(async (req, res, next) => {
   const { name, email, password, phone, role } = req.body;
   if (role === "super_admin") {
@@ -20,8 +21,7 @@ const create = catchAsync(async (req, res, next) => {
 });
 
 const login = catchAsync(async (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  const { email, password } = req.body;
 
   if (!email || !password) {
     return next(new AppError("Cannot leave email id or password field blank"));
@@ -41,8 +41,8 @@ const login = catchAsync(async (req, res, next) => {
     message: "Login successful",
     data: {
       user,
+      token,
     },
-    token,
   });
 });
 

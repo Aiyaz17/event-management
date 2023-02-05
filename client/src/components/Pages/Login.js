@@ -1,81 +1,100 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import axios from "axios";
-import { toast } from 'react-toastify';
-// import { useDispatch } from 'react-redux';
-// import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import getBaseUrl from "../../config";
+import { FormControl, Grid, Typography } from "@mui/material";
 const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    
-    // const dispatch = useDispatch();
-    // const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try{
-            await axios.post(`http://localhost:9000/login`, {
-                email,
-                password
-            }).then((response) => {
-                console.log("Login User>> ", JSON.stringify(response));
-                toast.success("Login Succesfull !!");
-                window.localStorage.setItem("redux_auth", JSON.stringify(response));
+  const dispatch = useDispatch();
+  const history = useHistory();
 
-                // dispatch({
-                //     type: "LOGGED_IN",
-                //     payload: response.data
-                // })
-                // navigate("/");
-            })
-        }
-        catch(err){
-            console.log("Error in Login Page ", err);
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios
+        .post(`${getBaseUrl()}/api/user/login`, {
+          email,
+          password,
+        })
+        .then((response) => {
+          response = response.data.data;
+          console.log("Login User>> ", JSON.stringify(response));
+          toast.success("Login Succesfull !!");
+          localStorage.setItem("redux_auth", JSON.stringify(response));
+
+          dispatch({
+            type: "LOGGED_IN",
+            payload: response,
+          });
+          history.push("/all-events");
+        });
+    } catch (err) {
+      console.log("Error in Login Page ", err);
     }
+  };
 
-    return (
-        <div>
-            <div className="mx-auto mt-4 text-center"> 
-                <h2>Login Page</h2>
-            </div>
+  return (
+    <Grid
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        alignItems: "center",
+        height: "90vh",
+        mt: "5%",
+      }}
+    >
+      <Typography variant="h2"> Login Page</Typography>
 
-            <div className="container">
-                <div className="row">
-                    <div className="col-6 offset-3">
-                        <form onSubmit={handleSubmit} className="mt-3">
-                            <div className="form-group mb-3">
-                                <label className="form-label">Email</label>
-                                <input 
-                                    type="email"
-                                    className='form-control'
-                                    placeholder='Enter Email'
-                                    value={email}
-                                    onChange={(e) => {setEmail(e.target.value)}}
-                                />
-                            </div>
-                            <div className="form-group mb-3">
-                                <label className="form-label">Password</label>
-                                <input 
-                                    type="password"
-                                    className='form-control'
-                                    placeholder='Enter Password'
-                                    value={password}
-                                    onChange={(e) => {setPassword(e.target.value)}}
-                                />
-                            </div>
-                                
-                            
+      <Grid container sx={{ display: "flex", justifyContent: "center" }}>
+        <Grid item sx={{ mt: 6 }}>
+          <form
+            onSubmit={handleSubmit}
+            style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+          >
+            <FormControl>
+              <label className="form-label">Email</label>
+              <input
+                type="email"
+                className="form-control"
+                placeholder="Enter Email"
+                value={email}
+                style={{ width: "300px", fontSize: "1rem" }}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
+            </FormControl>
 
-                            <button disabled={!email || !password} className='btn btn-primary text-white'>Submit</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-        
-    )
-}
+            <FormControl sx={{ mt: 3 }}>
+              <label className="form-label">Password</label>
+              <input
+                type="password"
+                className="form-control"
+                placeholder="Enter Password"
+                value={password}
+                style={{ width: "300px", fontSize: "1rem" }}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+            </FormControl>
+
+            <button
+              disabled={!email || !password}
+              className="btn btn-primary text-white"
+            >
+              Submit
+            </button>
+          </form>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+};
 
 export default Login;

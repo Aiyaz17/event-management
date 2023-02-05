@@ -110,8 +110,9 @@ const getEvents = async (req, res) => {
 };
 
 const registerEvent = catchAsync(async (req, res, next) => {
-  const { event_id } = req.body;
+  const { event_id } = Number(req.body);
   const id = req.user.id;
+
   await User.findByIdAndUpdate(
     id,
     { $addToSet: { registered_events: event_id } },
@@ -125,6 +126,7 @@ const registerEvent = catchAsync(async (req, res, next) => {
 
 const getRegisteredEvents = catchAsync(async (req, res, next) => {
   const id = req.user.id;
+
   const registeredEvents = await User.findOne(
     { _id: id },
     { registered_events: 1 }
